@@ -189,6 +189,61 @@ class Vertex(Problema):
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
 
+        def seleccionarGen():
+
+            if self.politica == 0: # Simple al azar
+                self.filaRandomPrimerGen = randint(0, len(self.matrizPoblacion) - 1)
+                self.columnaRandomPrimerGen = randint(0, len(self.matrizPoblacion[0]) - 1)
+
+                self.filaRandomSegundoGen = randint(0, len(self.matrizPoblacion) - 1)
+                self.columnaRandomSegundoGen = randint(0, len(self.matrizPoblacion[0]) - 1)
+
+                if self.filaRandomPrimerGen == self.filaRandomSegundoGen and self.columnaRandomPrimerGen == self.columnaRandomSegundoGen:
+                       seleccionarGen()
+
+                self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen][self.columnaRandomPrimerGen]
+                self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen][self.columnaRandonSegundoGen]
+
+                #Falta verificar que el numero de puntos no sea mayor al tama�o del gen
+
+                self.listaPuntosFijos = []
+
+                for i in range(self.numCruces):
+                    self.indiceRandom = randint(0, self.geneSize() - 1)
+                    self.listaPuntosFijos.append(self.indiceRandom)
+                    
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if listaPuntosFijos[i] == listaPuntosFijos[i+1]:
+                            seleccionarGen()
+                            
+                self.lsitaPuntosFijos.sort()
+                self.listaPuntosFijos.append(geneSize())
+
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                estaArriba = true
+                contadorIndices = 0
+                
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(self.GenPadre[contadorIndices])
+                            self.Hijo_B.append(self.GenMadre[contadorIndices])
+                            estaArriba = false
+                        else:
+                            self.Hijo_A.append(self.GenMadre[contadorIndices])
+                            self.Hijo_B.append(self.GenPadre[contadorIndices])
+                            estaArriba = true
+                        contadorIndices += 1
+    
+            elif self.politica == 1: # Rueda de la fortuna
+                pass
+
+            else: # Torneo
+                pass
+
 
 
 #Falta verificar que la población sea válida con el tamaño de recubrimiento
@@ -286,24 +341,33 @@ class Recubrimiento(Problema):
 ##        pass
 ###############################################-----PROGRAMA-----###############################################
 
-stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 3 2 output.txt"
-listaInstrucciones = stringInstrucciones.split()
-print(listaInstrucciones)
+def main():
 
-pCantGeneraciones = int(listaInstrucciones[3])
-pTamPoblacion = int(listaInstrucciones[4])
-pMutacion = int(listaInstrucciones[5])
-pPolitica = int(listaInstrucciones[6])
+    stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 3 2 output.txt"
+    listaInstrucciones = stringInstrucciones.split()
+    print(listaInstrucciones)
 
-#
-numeroDeCruces = 2
-#
-y = [1,1,1,0,1]
-x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
-x.readPoblacion()
-x.readProblema()
-x.fitness(y)
-print("\nRECUBRIMIENTO\n" )
-r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
-r.readProblema()
-r.readPoblacion()
+    pCantGeneraciones = int(listaInstrucciones[3])
+    pTamPoblacion = int(listaInstrucciones[4])
+    pMutacion = int(listaInstrucciones[5])
+    pPolitica = int(listaInstrucciones[6])
+
+    #
+    numeroDeCruces = 2
+    #
+    y = [1,1,1,0,1]
+    x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
+    x.readPoblacion()
+    x.readProblema()
+
+    genElegido = x.seleccionarGen()
+
+
+    x.fitness(y)
+    print("\nRECUBRIMIENTO\n" )
+    r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
+    r.readProblema()
+    r.readPoblacion()
+    
+if __name__ == "__main__":
+    main()
