@@ -97,8 +97,8 @@ class Vertex(Problema):
                 
                 for j in range(len(gen)):#Busca los indices de la matriz que debe eliminar
                         if gen[j] == 1:
-                                for i in range(len(x.matrizConexiones)):
-                                        if (j+1) in x.matrizConexiones[i]:
+                                for i in range(len(self.matrizConexiones)):
+                                        if (j+1) in self.matrizConexiones[i]:
                                                 listaIndices.append(i)
                                                 
                 for i in listaIndices:  #Limpia las lista si hay repetidos
@@ -189,20 +189,54 @@ class Vertex(Problema):
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
 
-        def seleccionarGen():
+        def mutar(self, genHijoA, genHijoB):
+            probabilidad = randint(1, 100)
+            
+            if probabilidad <= self.mutacion:
+
+                numeroDePuntosAMutar = randint(1, self.geneSize())
+                listaIndicesAMutar = []
+
+                for i in range(0, numeroDePuntosAMutar):
+                    posicionRandom = randint(0, self.geneSize() - 1)
+                    listaIndicesAMutar.append(posicionRandom)
+                    #verificar que no sean iguales
+
+                for i in range(len(listaIndicesAMutar)):
+                    if i != len(listaIndicesAMutar) - 1:
+                        if listaIndicesAMutar[i] == listaIndicesAMutar[i+1]:
+                            self.mutar(genHijoA, genHijoB)
+
+                
+
+                for i in range(len(listaIndicesAMutar)):
+                    if genHijoA[listaIndicesAMutar[i]] == 0:
+                        genHijoA[listaIndicesAMutar[i]] = 1
+                    else:
+                        genHijoA[listaIndicesAMutar[i]] = 0
+
+                    if genHijoB[listaIndicesAMutar[i]] == 0:
+                        genHijoB[listaIndicesAMutar[i]] = 1
+                    else:
+                        genHijoB[listaIndicesAMutar[i]] = 0
+            print("lista de indices a mutar: " + str(listaIndicesAMutar))
+                        
+            listaRetorno = []
+            listaRetorno.append(genHijoA)
+            listaRetorno.append(genHijoB)
+            return listaRetorno       
+
+        def seleccionarGen(self):
 
             if self.politica == 0: # Simple al azar
                 self.filaRandomPrimerGen = randint(0, len(self.matrizPoblacion) - 1)
-                self.columnaRandomPrimerGen = randint(0, len(self.matrizPoblacion[0]) - 1)
-
                 self.filaRandomSegundoGen = randint(0, len(self.matrizPoblacion) - 1)
-                self.columnaRandomSegundoGen = randint(0, len(self.matrizPoblacion[0]) - 1)
 
-                if self.filaRandomPrimerGen == self.filaRandomSegundoGen and self.columnaRandomPrimerGen == self.columnaRandomSegundoGen:
-                       seleccionarGen()
+                if self.filaRandomPrimerGen == self.filaRandomSegundoGen:
+                       self.seleccionarGen()
 
-                self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen][self.columnaRandomPrimerGen]
-                self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen][self.columnaRandonSegundoGen]
+                self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen]
+                self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen]
 
                 #Falta verificar que el numero de puntos no sea mayor al tamaño del gen
 
@@ -214,16 +248,16 @@ class Vertex(Problema):
                     
                 for i in range(len(self.listaPuntosFijos)):
                     if i != len(self.listaPuntosFijos) - 1:
-                        if listaPuntosFijos[i] == listaPuntosFijos[i+1]:
-                            seleccionarGen()
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
                             
-                self.lsitaPuntosFijos.sort()
-                self.listaPuntosFijos.append(geneSize())
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(self.geneSize())
 
                 self.Hijo_A = []
                 self.Hijo_B = []
 
-                estaArriba = true
+                estaArriba = True
                 contadorIndices = 0
                 
                 for i in range(len(self.listaPuntosFijos)):
@@ -231,18 +265,102 @@ class Vertex(Problema):
                         if estaArriba:
                             self.Hijo_A.append(self.GenPadre[contadorIndices])
                             self.Hijo_B.append(self.GenMadre[contadorIndices])
-                            estaArriba = false
+                            estaArriba = False
                         else:
                             self.Hijo_A.append(self.GenMadre[contadorIndices])
                             self.Hijo_B.append(self.GenPadre[contadorIndices])
-                            estaArriba = true
+                            estaArriba = True
                         contadorIndices += 1
+
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+
+                return self.listaHijosMutados[eleccionFinal]
     
             elif self.politica == 1: # Rueda de la fortuna
-                pass
+                sumaDeFitnesses = 0
+                listaDeFitnesses = []
+
+                for i in range(len(self.matrizPoblacion)):
+                    sumaDeFitnesses += self.fitness(self.matrizPoblacion[i])
+                    listaDeFitnesses.append(self.fitness(self.matrizPoblacion[i]))
+
+                minimoASumar = min(listaDeFitnesses)
+
+                for i in range(len(listaDeFitnesses)):
+                    listaDeFitnesses[i] += abs(minimoASumar) + 1
+
+                sumaDeFitnesses = sum(listaDeFitnesses)
+                
+                print("Lista de Fitnesses: " + str(listaDeFitnesses))
+                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
+
+                ruedaDeLaFortuna = []
+
+                for i in range(len(listaDeFitnesses)):
+                    indiceARepetir = listaDeFitnesses[i]
+                    while indiceARepetir != 0:
+                        ruedaDeLaFortuna.append(self.matrizPoblacion[i])
+                        indiceARepetir -= 1
+                
+                self.GenMadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
+                self.GenPadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
+
+                print("El padre es: " + str(self.GenPadre))
+                print("La madre es: " + str(self.GenMadre))
+                
+                if self.GenMadre == self.GenPadre:
+                    self.seleccionarGen()
+
+                
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                self.listaPuntosFijos = []
+
+                for i in range(0, self.numCruces):
+                    self.listaPuntosFijos.append(randint(0, self.geneSize() - 1))
+
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
+
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(self.geneSize())
+                estaArriba = True
+                contadorIndices = 0
+
+                print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
+                
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(self.GenPadre[contadorIndices])
+                            self.Hijo_B.append(self.GenMadre[contadorIndices])
+                            estaArriba = False
+                        else:
+                            self.Hijo_A.append(self.GenMadre[contadorIndices])
+                            self.Hijo_B.append(self.GenPadre[contadorIndices])
+                            estaArriba = True
+                        contadorIndices += 1
+
+                print("Hijo A: "+str(self.Hijo_A))
+                print("Hijo B: "+str(self.Hijo_B))
+                
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+
+                return self.listaHijosMutados[eleccionFinal]
+                        
+                
+
+                print(genGanador)
 
             else: # Torneo
-                pass
+                return self.getBest(self.matrizPoblacion) ##
 
 
 
@@ -343,7 +461,7 @@ class Recubrimiento(Problema):
 
 def main():
 
-    stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 3 2 output.txt"
+    stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 100 1 output.txt"
     listaInstrucciones = stringInstrucciones.split()
     print(listaInstrucciones)
 
@@ -360,10 +478,12 @@ def main():
     x.readPoblacion()
     x.readProblema()
 
-    genElegido = x.seleccionarGen()
-
-
     x.fitness(y)
+
+    x.seleccionarGen()
+
+
+    
     print("\nRECUBRIMIENTO\n" )
     r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
     r.readProblema()
