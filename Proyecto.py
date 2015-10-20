@@ -46,6 +46,7 @@ class Vertex(Problema):
                      self.matrizConexiones = []
                      self.cantGeneraciones = cantGeneraciones
                      self.matrizPoblacion = []
+                     self.nuevaPoblacion = []
                      
         def readProblema(self):
                
@@ -440,6 +441,7 @@ class Recubrimiento(Problema):
                      self.matrizPoblacion = []
                      self.universo = []
                      self.subconjuntosBinarios = []
+                     self.nuevaPoblacion = []
 ##    def resetPoblacion(self, tamano):
 ##        pass
 ##
@@ -569,6 +571,46 @@ class Recubrimiento(Problema):
             print(listaResulFitness)
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]
+        
+        def mutar(self, genHijoA, genHijoB):
+            print("Indice Mutacion : " + str(self.mutacion))
+            probabilidad = 1
+            
+            if probabilidad <= self.mutacion:
+
+                numeroDePuntosAMutar = randint(1, self.geneSize())
+                listaIndicesAMutar = []
+
+                for i in range(0, numeroDePuntosAMutar):
+                    posicionRandom = randint(0, self.geneSize() - 1)
+                    listaIndicesAMutar.append(posicionRandom)
+                    #verificar que no sean iguales
+
+                for i in range(len(listaIndicesAMutar)):
+                    if i != len(listaIndicesAMutar) - 1:
+                        if listaIndicesAMutar[i] == listaIndicesAMutar[i+1]:
+                            self.mutar(genHijoA, genHijoB)
+
+                
+
+                for i in range(len(listaIndicesAMutar)):
+                    if genHijoA[listaIndicesAMutar[i]] == 0:
+                        genHijoA[listaIndicesAMutar[i]] = 1
+                    else:
+                        genHijoA[listaIndicesAMutar[i]] = 0
+
+                    if genHijoB[listaIndicesAMutar[i]] == 0:
+                        genHijoB[listaIndicesAMutar[i]] = 1
+                    else:
+                        genHijoB[listaIndicesAMutar[i]] = 0
+            #print("lista de indices a mutar: " + str(listaIndicesAMutar))
+                        
+            listaRetorno = []
+            listaRetorno.append(genHijoA)
+            listaRetorno.append(genHijoB)
+            return listaRetorno       
+
+
 ###############################################-----PROGRAMA-----###############################################
 
 def main():
