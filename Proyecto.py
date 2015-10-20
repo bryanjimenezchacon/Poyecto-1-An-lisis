@@ -462,7 +462,8 @@ class Recubrimiento(Problema):
                                 saltoLinea += 1
                         else:
                                 saltoLinea += 1
-                print(self.matrizPoblacion)
+                print("Poblacion: " + str(self.matrizPoblacion)+ "\n")
+                
         def writePoblacion(self):
                 self.stringPoblacion = ""
                 
@@ -476,46 +477,73 @@ class Recubrimiento(Problema):
                 self.salida.close()
 
         def fitness(self, gen):
-            pass
-
+            self.gen = gen
+            self.resulFitness = 0
+            self.listaSubconjuntosGen = []
+            self.universoFinal = []
+            for i in range(len(gen)):
+                if gen[i] == 1:
+                    self.listaSubconjuntosGen.append(self.subconjuntos[i])
+            for i in range(len(self.listaSubconjuntosGen)):
+                for j in range (len(self.listaSubconjuntosGen[i])):
+                    if self.listaSubconjuntosGen[i][j] not in self.universoFinal:
+                        self.universoFinal.append(self.listaSubconjuntosGen[i][j])
+            self.universoFinal.sort()                    
+            if self.universoFinal == self.universo:
+                self.resulFitness = len(self.listaSubconjuntosGen)
+                
+            else:
+                self.resulFitness = len(self.listaSubconjuntosGen) + len(self.subconjuntos)
+            print(self.listaSubconjuntosGen)
+            print("Univeso Final: " + str(self.universoFinal))
+            print("Fitness: " + str(self.resulFitness))
+            return self.resulFitness
+        
         def generacion(self):
             pass
-##
-##    def getBest(self, gen=None):
-##        self.gen = gen
-##        return gen
-##        pass
+    
+        def getBest(self):
+            listaResulFitness = []
+            for i in range(len(self.matrizPoblacion)):
+                listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
+            print(listaResulFitness)
+            print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]))
+            return self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]
 ###############################################-----PROGRAMA-----###############################################
 
 def main():
 
-    stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 100 1 output.txt"
-    listaInstrucciones = stringInstrucciones.split()
-    print(listaInstrucciones)
+	stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 100 1 output.txt"
+	listaInstrucciones = stringInstrucciones.split()
+	print(listaInstrucciones)
 
-    pCantGeneraciones = int(listaInstrucciones[3])
-    pTamPoblacion = int(listaInstrucciones[4])
-    pMutacion = int(listaInstrucciones[5])
-    pPolitica = int(listaInstrucciones[6])
+	pCantGeneraciones = int(listaInstrucciones[3])
+	pTamPoblacion = int(listaInstrucciones[4])
+	pMutacion = int(listaInstrucciones[5])
+	pPolitica = int(listaInstrucciones[6])
 
-    #
-    numeroDeCruces = 2
-    #
-    y = [1,1,1,0,1]
-    x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
-    x.readPoblacion()
-    x.readProblema()
+	#
+	numeroDeCruces = 2
+	#
+	y = [1,1,1,0,1]
+	print("\nVERTEX\n" )
+	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
+	x.readPoblacion()
+	x.readProblema()
 
-    x.fitness(y)
+	x.fitness(y)
 
-    x.seleccionarGen()
+	x.seleccionarGen()
 
 
-    
-    print("\nRECUBRIMIENTO\n" )
-    r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
-    r.readProblema()
-    r.readPoblacion()
+
+	print("\nRECUBRIMIENTO\n" )
+	genRecPrueba = [0,1,0,0,1]
+	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
+	r.readProblema()
+	r.readPoblacion()
+	r.fitness(genRecPrueba)
+	r.getBest()
     
 if __name__ == "__main__":
     main()
