@@ -77,7 +77,7 @@ class Vertex(Problema):
                 return self.tamanioGen
 
         def fitness(self,gen):
-                print("Matriz Conexiones: " + str(self.matrizConexiones))
+               # print("Matriz Conexiones: " + str(self.matrizConexiones))
                  
                 self.gen = gen
                 self.num_ceros = 0
@@ -89,7 +89,7 @@ class Vertex(Problema):
                                 self.num_ceros += 1
 
                 self.num_unos = self.geneSize() - self.num_ceros
-                print("Numeros de unos: " + str(self.num_unos))
+                #print("Numeros de unos: " + str(self.num_unos))
                 listaIndices = []
                 listaIndicesFinal = []
                 
@@ -107,12 +107,12 @@ class Vertex(Problema):
                                 
                 listaIndicesFinal.sort()
                 listaIndicesFinal.reverse()
-                print("Lista de Indices Final: " + str(listaIndicesFinal))
+              #  print("Lista de Indices Final: " + str(listaIndicesFinal))
                 
                 for i in range(len(listaIndicesFinal)): #Elimina las aristas
                         self.AristasNoCubiertas.remove(self.AristasNoCubiertas[listaIndicesFinal[i]])
 
-                print("Aristas no cubiertas despuÃ©s: " + str(self.AristasNoCubiertas))
+               # print("Aristas no cubiertas despuÃƒÂ©s: " + str(self.AristasNoCubiertas))
 
                 self.cantidadAristasNoCubiertas = len(self.AristasNoCubiertas)
                 
@@ -134,9 +134,9 @@ class Vertex(Problema):
         def readPoblacion(self):
                 self.datos = open("datosVertex.txt", 'r')
                 
-                self.matrizPoblacion = [] #Matriz final en donde quedará guardada la población
+                self.matrizPoblacion = [] #Matriz final en donde quedarÃ¡ guardada la poblaciÃ³n
                 self.listaGen = [] #Lista auxiliar para ciclo
-                saltoLinea = 0 #Variable para indicar el comienzo de la población en archivo
+                saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃ³n en archivo
 
                 for line in self.datos:
                         if saltoLinea > 1:
@@ -238,7 +238,7 @@ class Vertex(Problema):
                 self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen]
                 self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen]
 
-                #Falta verificar que el numero de puntos no sea mayor al tama�o del gen
+                #Falta verificar que el numero de puntos no sea mayor al tamaño del gen
 
                 self.listaPuntosFijos = []
 
@@ -364,8 +364,8 @@ class Vertex(Problema):
 
 
 
-#Falta verificar que la población sea válida con el tamaño de recubrimiento
-#Falta hacer la restricción en caso de que el tamaño de población sea cero 
+#Falta verificar que la poblaciÃ³n sea vÃ¡lida con el tamaÃ±o de recubrimiento
+#Falta hacer la restricciÃ³n en caso de que el tamaÃ±o de poblaciÃ³n sea cero 
 
 ##########################################-----MIN COVER-----##########################################
 class Recubrimiento(Problema):
@@ -378,6 +378,8 @@ class Recubrimiento(Problema):
                      self.subconjuntos = []
                      self.cantGeneraciones = cantGeneraciones
                      self.matrizPoblacion = []
+                     self.universo = []
+                     self.subconjuntosBinarios = []
 ##    def resetPoblacion(self, tamano):
 ##        pass
 ##
@@ -398,15 +400,40 @@ class Recubrimiento(Problema):
                             listaSubconjunto.append(int(self.linea[i]))
                     self.subconjuntos.append(listaSubconjunto)
                     self.linea = self.archi.readline()
-                print(self.subconjuntos)
+                
                 self.archi.close()
+                for i in range(len(self.subconjuntos)):#Odena la matriz
+                    self.subconjuntos[i].sort()
+                print("Subconjuntos: " + str(self.subconjuntos))
+                
+                for i in range(len(self.subconjuntos)):# Crea el universo
+                    for j in range(len(self.subconjuntos[i])):
+                        if self.subconjuntos[i][j] not in self.universo:
+                            self.universo.append(self.subconjuntos[i][j])
+                self.universo.sort()
+                print("Universo: " + str(self.universo))
+
+                for i in range(len(self.subconjuntos)):#Crea la matriz vacia
+                    self.subconjuntosBinarios.append([])
+                    
+                for i in range(len(self.subconjuntosBinarios)):#Traduce los subconjuntos a 1 y 0
+                    for j in range(len(self.universo)):
+                        if self.universo[j] not in self.subconjuntos[i]:
+                            self.subconjuntosBinarios[i].append(0)
+                        else:
+                            self.subconjuntosBinarios[i].append(1)
+        
+                print("Subconjuntos binarios: " +str(self.subconjuntosBinarios))
+                        
+                    
+                    
 
         def readPoblacion(self):
                 self.datos = open("datosRecMin.txt", 'r')
                 
-                self.matrizPoblacion = [] #Matriz final en donde quedará guardada la población
+                self.matrizPoblacion = [] #Matriz final en donde quedarÃ¡ guardada la poblaciÃ³n
                 self.listaGen = [] #Lista auxiliar para ciclo
-                saltoLinea = 0 #Variable para indicar el comienzo de la población en archivo
+                saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃ³n en archivo
 
                 for line in self.datos:
                         if saltoLinea > 1:
@@ -435,6 +462,7 @@ class Recubrimiento(Problema):
                                 saltoLinea += 1
                         else:
                                 saltoLinea += 1
+                print(self.matrizPoblacion)
         def writePoblacion(self):
                 self.stringPoblacion = ""
                 
