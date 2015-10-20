@@ -23,7 +23,7 @@ class Problema():
 
     def geneSize(self):## Retorna el tamanio del gen
         self.tamano = tamano
-        tamano = len(m_genes[0])
+        self.tamano = len(m_genes[0])
         return tamano
 
     def fitness(self, gen):## Calculo del fitness
@@ -49,22 +49,30 @@ class Vertex(Problema):
                      self.nuevaPoblacion = []
                      
         def readProblema(self):
-               
-                self.archi = open("problemaVertex.txt" , 'r')
-                self.nombre = self.archi.readline()#Nombre del problema
-                self.numVertices = int(self.archi.readline())
-                self.numAristas = int(self.archi.readline())
-                self.tamanioRecubrimiento = int(self.archi.readline())
-                
+            self.archi = open("problemaVertex.txt" , 'r')
+            self.nombre = self.archi.readline()#Nombre del problema
+
+            self.cantidadesEspecificas = self.archi.readline().replace("\n", "")
+            
+            listaCantidadesConvertidas = self.cantidadesEspecificas.split()
+
+            for i in range(len(listaCantidadesConvertidas)):
+                listaCantidadesConvertidas[i] = int(listaCantidadesConvertidas[i])
+            
+            self.numVertices = listaCantidadesConvertidas[0]
+            self.numAristas = listaCantidadesConvertidas[1]
+            self.tamanioRecubrimiento = listaCantidadesConvertidas[2]
+            
+            self.linea = self.archi.readline()
+            while self.linea != "":
+                vectorAuxiliar = self.linea.replace("\n", "")
+                vectorAuxiliar = vectorAuxiliar.split()
+              # print (self.linea)
+                self.matrizConexiones.append([int(vectorAuxiliar[0]), int(vectorAuxiliar[1])])
+              #  print(self.matrizConexiones)
                 self.linea = self.archi.readline()
-                while self.linea != "":
-                    
-                  # print (self.linea)
-                    self.matrizConexiones.append([int(self.linea[0]), int(self.linea[1])])
-                  #  print(self.matrizConexiones)
-                    self.linea = self.archi.readline()
-                    
-                self.archi.close()
+                
+            self.archi.close()
 
         def geneSize(self):
 
@@ -578,11 +586,11 @@ class Recubrimiento(Problema):
             
             if probabilidad <= self.mutacion:
 
-                numeroDePuntosAMutar = randint(1, self.geneSize())
+                numeroDePuntosAMutar = randint(1, len(self.matrizPoblacion[0]))
                 listaIndicesAMutar = []
 
                 for i in range(0, numeroDePuntosAMutar):
-                    posicionRandom = randint(0, self.geneSize() - 1)
+                    posicionRandom = randint(0, len(self.matrizPoblacion[0]) - 1)
                     listaIndicesAMutar.append(posicionRandom)
                     #verificar que no sean iguales
 
@@ -603,12 +611,209 @@ class Recubrimiento(Problema):
                         genHijoB[listaIndicesAMutar[i]] = 1
                     else:
                         genHijoB[listaIndicesAMutar[i]] = 0
-            #print("lista de indices a mutar: " + str(listaIndicesAMutar))
+                        
+            print("lista de indices a mutar: " + str(listaIndicesAMutar))
                         
             listaRetorno = []
             listaRetorno.append(genHijoA)
             listaRetorno.append(genHijoB)
             return listaRetorno       
+
+        def seleccionarGen(self):
+
+            if self.politica == 0: # Simple al azar
+                self.filaRandomPrimerGen = randint(0, len(self.matrizPoblacion) - 1)
+                self.filaRandomSegundoGen = randint(0, len(self.matrizPoblacion) - 1)
+
+                if self.filaRandomPrimerGen == self.filaRandomSegundoGen:
+                       self.seleccionarGen()
+
+                self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen]
+                self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen]
+
+                #Falta verificar que el numero de puntos no sea mayor al tamaño del gen
+
+                self.listaPuntosFijos = []
+
+                for i in range(self.numCruces):
+                    self.indiceRandom = randint(0, len(self.matrizPoblacion[i]) - 1)
+                    self.listaPuntosFijos.append(self.indiceRandom)
+                    
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
+                            
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(self.geneSize())
+
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                estaArriba = True
+                contadorIndices = 0
+                
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(self.GenPadre[contadorIndices])
+                            self.Hijo_B.append(self.GenMadre[contadorIndices])
+                            estaArriba = False
+                        else:
+                            self.Hijo_A.append(self.GenMadre[contadorIndices])
+                            self.Hijo_B.append(self.GenPadre[contadorIndices])
+                            estaArriba = True
+                        contadorIndices += 1
+
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+
+                return self.listaHijosMutados[eleccionFinal]
+    
+            elif self.politica == 1: # Rueda de la fortuna
+                sumaDeFitnesses = 0
+                listaDeFitnesses = []
+
+                for i in range(len(self.matrizPoblacion)):
+                    sumaDeFitnesses += self.fitness(self.matrizPoblacion[i])
+                    listaDeFitnesses.append(self.fitness(self.matrizPoblacion[i]))
+
+                minimoASumar = min(listaDeFitnesses)
+
+                for i in range(len(listaDeFitnesses)):
+                    listaDeFitnesses[i] += abs(minimoASumar) + 1
+
+                sumaDeFitnesses = sum(listaDeFitnesses)
+                
+                print("Lista de Fitnesses: " + str(listaDeFitnesses))
+                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
+
+                ruedaDeLaFortuna = []
+
+                for i in range(len(listaDeFitnesses)):
+                    indiceARepetir = listaDeFitnesses[i]
+                    while indiceARepetir != 0:
+                        ruedaDeLaFortuna.append(self.matrizPoblacion[i])
+                        indiceARepetir -= 1
+                
+                self.GenMadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
+                self.GenPadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
+
+                print("El padre es: " + str(self.GenPadre))
+                print("La madre es: " + str(self.GenMadre))
+                
+                if self.GenMadre == self.GenPadre:
+                    self.seleccionarGen()
+
+                
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                self.listaPuntosFijos = []
+
+                for i in range(0, self.numCruces):
+                    self.listaPuntosFijos.append(randint(0, len(self.matrizPoblacion[0]) - 1))
+
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
+
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(self.geneSize())
+                estaArriba = True
+                contadorIndices = 0
+
+                print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
+                
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(self.GenPadre[contadorIndices])
+                            self.Hijo_B.append(self.GenMadre[contadorIndices])
+                            estaArriba = False
+                        else:
+                            self.Hijo_A.append(self.GenMadre[contadorIndices])
+                            self.Hijo_B.append(self.GenPadre[contadorIndices])
+                            estaArriba = True
+                        contadorIndices += 1
+
+                print("Hijo A: "+str(self.Hijo_A))
+                print("Hijo B: "+str(self.Hijo_B))
+                
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+
+                return self.listaHijosMutados[eleccionFinal]
+                        
+                
+
+                print(genGanador)
+
+            else: # Torneo
+                listaResulFitness = []
+                for i in range(len(self.matrizPoblacion)):
+                    listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
+
+                listaPadres = []#Guarda los dos mejores fitness
+                listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
+                print("Listassss : \n")
+                print(listaResulFitness)
+                print(max(listaResulFitness))
+                listaResulFitness.pop(listaResulFitness.index(max(listaResulFitness)))
+                listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
+                print(max(listaResulFitness))
+                print(listaPadres)
+
+                Padre = self.matrizPoblacion[listaPadres[0]]
+                Madre = self.matrizPoblacion[listaPadres[1]]
+
+                print(Padre, Madre)
+
+                self.listaPuntosFijos = []
+
+                for i in range(self.numCruces):
+                    self.indiceRandom = randint(0, len(self.matrizPoblacion[i]) - 1)
+                    self.listaPuntosFijos.append(self.indiceRandom)
+                    
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
+                            
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(len(self.matrizPoblacion[i]))
+
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                estaArriba = True
+                contadorIndices = 0
+                
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(Padre[contadorIndices])
+                            self.Hijo_B.append(Madre[contadorIndices])
+                            estaArriba = False
+                        else:
+                            self.Hijo_A.append(Madre[contadorIndices])
+                            self.Hijo_B.append(Padre[contadorIndices])
+                            estaArriba = True
+                        contadorIndices += 1
+
+                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+                print("Numero de Curces: " + str(self.numCruces))
+                
+                print("Hijos Mutados: " + str(self.listaHijosMutados))
+
+                return self.listaHijosMutados[eleccionFinal]                
+                
 
 
 ###############################################-----PROGRAMA-----###############################################
@@ -640,12 +845,23 @@ def main():
 
 
 	print("\nRECUBRIMIENTO\n" )
+	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
+	listaInstrucciones = stringInstrucciones.split()
+	print(listaInstrucciones)
+
+	pCantGeneraciones = int(listaInstrucciones[3])
+	pTamPoblacion = int(listaInstrucciones[4])
+	pMutacion = int(listaInstrucciones[5])
+	pPolitica = int(listaInstrucciones[6])
+
+	#
+	numeroDeCruces = 2
 	genRecPrueba = [0,1,0,0,1]
 	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
-	r.readProblema()
 	r.readPoblacion()
-	r.fitness(genRecPrueba)
+	r.readProblema()
 	r.getBest()
+	r.seleccionarGen()
     
 if __name__ == "__main__":
     main()
