@@ -450,28 +450,32 @@ class Recubrimiento(Problema):
                      self.universo = []
                      self.subconjuntosBinarios = []
                      self.nuevaPoblacion = []
+                     
+                     
 ##    def resetPoblacion(self, tamano):
 ##        pass
 ##
         def readProblema(self):
                
                 self.archi = open("problemaRec.txt" , 'r')
+                
                 self.nombre = self.archi.readline()#Nombre del problema
-                self.tamUniverso = int(self.archi.readline())
-                self.cantSubconjuntos = int(self.archi.readline())
+
+                listaParametros = self.archi.readline().replace("\n", "")
+                listaParametros = listaParametros.split()
+                
+                self.tamUniverso = int(listaParametros[0])
+                self.cantSubconjuntos = int(listaParametros[1])
+                self.cantSubconjuntosDeseados = int(listaParametros[2])
                 
                 self.linea = self.archi.readline()
                 while self.linea != "":
-                    listaSubconjunto = []
-                    for i in range(len(self.linea)):
-                        if self.linea[i] == '\n':
-                            pass
-                        else:
-                            listaSubconjunto.append(int(self.linea[i]))
+                    listaSubconjunto = self.linea.replace("\n", "")
+                    listaSubconjunto = listaSubconjunto.split()
                     self.subconjuntos.append(listaSubconjunto)
                     self.linea = self.archi.readline()
-                
                 self.archi.close()
+                
                 for i in range(len(self.subconjuntos)):#Ordena la matriz
                     self.subconjuntos[i].sort()
                 print("Subconjuntos: " + str(self.subconjuntos))
@@ -494,8 +498,6 @@ class Recubrimiento(Problema):
                             self.subconjuntosBinarios[i].append(1)
         
                 print("Subconjuntos binarios: " +str(self.subconjuntosBinarios))
-                        
-                    
                     
 
         def readPoblacion(self):
