@@ -360,7 +360,27 @@ class Vertex(Problema):
                 print(genGanador)
 
             else: # Torneo
-                return self.getBest(self.matrizPoblacion) ##
+                listaResulFitness = []
+                for i in range(len(self.matrizPoblacion)):
+                    listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
+
+                listaPadres = []#Guarda los dos mejores fitness
+                listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
+                print("Listassss : \n")
+                print(listaResulFitness)
+                print(max(listaResulFitness))
+                listaResulFitness.pop(listaResulFitness.index(max(listaResulFitness)))
+                listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
+                print(max(listaResulFitness))
+                print(listaPadres)
+
+                Padre = self.matrizPoblacion[listaPadres[0]]
+                Madre = self.matrizPoblacion[listaPadres[1]]
+
+                print(Padre, Madre)
+
+                
+                
 
 
 
@@ -402,7 +422,7 @@ class Recubrimiento(Problema):
                     self.linea = self.archi.readline()
                 
                 self.archi.close()
-                for i in range(len(self.subconjuntos)):#Odena la matriz
+                for i in range(len(self.subconjuntos)):#Ordena la matriz
                     self.subconjuntos[i].sort()
                 print("Subconjuntos: " + str(self.subconjuntos))
                 
@@ -513,7 +533,7 @@ class Recubrimiento(Problema):
 
 def main():
 
-	stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 100 1 output.txt"
+	stringInstrucciones = "genetico mincover.txt datosVertex.txt 100 1000 100 2 output.txt"
 	listaInstrucciones = stringInstrucciones.split()
 	print(listaInstrucciones)
 
