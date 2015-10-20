@@ -379,7 +379,47 @@ class Vertex(Problema):
 
                 print(Padre, Madre)
 
+                self.listaPuntosFijos = []
+
+                for i in range(self.numCruces):
+                    self.indiceRandom = randint(0, self.geneSize() - 1)
+                    self.listaPuntosFijos.append(self.indiceRandom)
+                    
+                for i in range(len(self.listaPuntosFijos)):
+                    if i != len(self.listaPuntosFijos) - 1:
+                        if self.listaPuntosFijos[i] == self.listaPuntosFijos[i+1]:
+                            self.seleccionarGen()
+                            
+                self.listaPuntosFijos.sort()
+                self.listaPuntosFijos.append(self.geneSize())
+
+                self.Hijo_A = []
+                self.Hijo_B = []
+
+                estaArriba = True
+                contadorIndices = 0
                 
+                for i in range(len(self.listaPuntosFijos)):
+                    while contadorIndices != self.listaPuntosFijos[i]:
+                        if estaArriba:
+                            self.Hijo_A.append(Padre[contadorIndices])
+                            self.Hijo_B.append(Madre[contadorIndices])
+                            estaArriba = False
+                        else:
+                            self.Hijo_A.append(Madre[contadorIndices])
+                            self.Hijo_B.append(Padre[contadorIndices])
+                            estaArriba = True
+                        contadorIndices += 1
+
+                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
+                self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
+
+                eleccionFinal = randint(0, 1)
+                print("Numero de Curces: " + str(self.numCruces))
+                
+                print("Hijos Mutados: " + str(self.listaHijosMutados))
+
+                return self.listaHijosMutados[eleccionFinal]                
                 
 
 
