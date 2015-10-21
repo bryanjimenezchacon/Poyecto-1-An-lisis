@@ -867,7 +867,7 @@ class Recubrimiento(Problema):
     
 ###############################################-----PROGRAMA-----###############################################
 
-<<<<<<< HEAD
+
 def main():
 
 ##	stringInstrucciones = "genetico mincover.txt datosVertex.txt 1 1000 100 0 output.txt"
@@ -896,7 +896,6 @@ def main():
 
 	print("\nRECUBRIMIENTO\n" )
 	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 1 1000 100 2 output.txt"
-=======
 	#
 	numeroDeCruces = 2
 	#
@@ -914,7 +913,6 @@ def main():
 
 	print("\nRECUBRIMIENTO\n" )
 	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
->>>>>>> origin/master
 	listaInstrucciones = stringInstrucciones.split()
 	print(listaInstrucciones)
 
@@ -929,12 +927,12 @@ def main():
 	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
 	r.readPoblacion()
 	r.readProblema()
-<<<<<<< HEAD
+
 	r.generacion()
-=======
+
 	r.getBest()
 	r.seleccionarGen()
->>>>>>> origin/master
+
     
 if __name__ == "__main__":
     main()
