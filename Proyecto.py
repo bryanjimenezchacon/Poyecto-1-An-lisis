@@ -581,6 +581,9 @@ class Recubrimiento(Problema):
             for i in range(len(gen)):
                 if gen[i] == 1:
                     self.listaSubconjuntosGen.append(self.subconjuntos[i])
+            
+            print("\ngen"+str(self.gen))
+            print("Lista subconjuntos gen"+str(self.listaSubconjuntosGen)+"\n")
             for i in range(len(self.listaSubconjuntosGen)):
                 for j in range (len(self.listaSubconjuntosGen[i])):
                     if self.listaSubconjuntosGen[i][j] not in self.universoFinal:
@@ -864,6 +867,7 @@ class Recubrimiento(Problema):
     
 ###############################################-----PROGRAMA-----###############################################
 
+<<<<<<< HEAD
 def main():
 
 ##	stringInstrucciones = "genetico mincover.txt datosVertex.txt 1 1000 100 0 output.txt"
@@ -892,6 +896,25 @@ def main():
 
 	print("\nRECUBRIMIENTO\n" )
 	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 1 1000 100 2 output.txt"
+=======
+	#
+	numeroDeCruces = 2
+	#
+	y = [1,1,1,0,1]
+##	print("\nVERTEX\n" )
+##	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
+##	x.readPoblacion()
+##	x.readProblema()
+##	x.generacion()
+##        
+##	x.fitness(y)
+##
+##	x.seleccionarGen()
+##	x.resetPoblacion()
+
+	print("\nRECUBRIMIENTO\n" )
+	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
+>>>>>>> origin/master
 	listaInstrucciones = stringInstrucciones.split()
 	print(listaInstrucciones)
 
@@ -906,7 +929,12 @@ def main():
 	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
 	r.readPoblacion()
 	r.readProblema()
+<<<<<<< HEAD
 	r.generacion()
+=======
+	r.getBest()
+	r.seleccionarGen()
+>>>>>>> origin/master
     
 if __name__ == "__main__":
     main()
