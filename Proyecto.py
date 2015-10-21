@@ -576,6 +576,9 @@ class Recubrimiento(Problema):
             for i in range(len(gen)):
                 if gen[i] == 1:
                     self.listaSubconjuntosGen.append(self.subconjuntos[i])
+            
+            print("\ngen"+str(self.gen))
+            print("Lista subconjuntos gen"+str(self.listaSubconjuntosGen)+"\n")
             for i in range(len(self.listaSubconjuntosGen)):
                 for j in range (len(self.listaSubconjuntosGen[i])):
                     if self.listaSubconjuntosGen[i][j] not in self.universoFinal:
@@ -855,35 +858,35 @@ def main():
 	numeroDeCruces = 2
 	#
 	y = [1,1,1,0,1]
-	print("\nVERTEX\n" )
-	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
-	x.readPoblacion()
-	x.readProblema()
-	x.generacion()
-        
+##	print("\nVERTEX\n" )
+##	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
+##	x.readPoblacion()
+##	x.readProblema()
+##	x.generacion()
+##        
 ##	x.fitness(y)
 ##
 ##	x.seleccionarGen()
 ##	x.resetPoblacion()
 
-##	print("\nRECUBRIMIENTO\n" )
-##	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
-##	listaInstrucciones = stringInstrucciones.split()
-##	print(listaInstrucciones)
-##
-##	pCantGeneraciones = int(listaInstrucciones[3])
-##	pTamPoblacion = int(listaInstrucciones[4])
-##	pMutacion = int(listaInstrucciones[5])
-##	pPolitica = int(listaInstrucciones[6])
-##
-##	#
-##	numeroDeCruces = 2
-##	genRecPrueba = [0,1,0,0,1]
-##	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
-##	r.readPoblacion()
-##	r.readProblema()
-##	r.getBest()
-##	r.seleccionarGen()
-##    
+	print("\nRECUBRIMIENTO\n" )
+	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
+	listaInstrucciones = stringInstrucciones.split()
+	print(listaInstrucciones)
+
+	pCantGeneraciones = int(listaInstrucciones[3])
+	pTamPoblacion = int(listaInstrucciones[4])
+	pMutacion = int(listaInstrucciones[5])
+	pPolitica = int(listaInstrucciones[6])
+
+	#
+	numeroDeCruces = 2
+	genRecPrueba = [0,1,0,0,1]
+	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
+	r.readPoblacion()
+	r.readProblema()
+	r.getBest()
+	r.seleccionarGen()
+    
 if __name__ == "__main__":
     main()
