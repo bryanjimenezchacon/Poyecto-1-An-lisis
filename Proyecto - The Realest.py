@@ -122,7 +122,7 @@ class Vertex(Problema):
                 for i in range(len(listaIndicesFinal)): #Elimina las aristas
                         self.AristasNoCubiertas.remove(self.AristasNoCubiertas[listaIndicesFinal[i]])
 
-               # print("Aristas no cubiertas despuÃƒÂ©s: " + str(self.AristasNoCubiertas))
+               # print("Aristas no cubiertas despuÃƒÆ’Ã‚Â©s: " + str(self.AristasNoCubiertas))
 
                 self.cantidadAristasNoCubiertas = len(self.AristasNoCubiertas)
                 
@@ -158,11 +158,11 @@ class Vertex(Problema):
         def readPoblacion(self):
                 self.datos = open("datosVertex.txt", 'r')
                 
-                self.matrizPoblacion = [] #Matriz final en donde quedarÃ¡ guardada la poblaciÃ³n
+                self.matrizPoblacion = [] #Matriz final en donde quedarÃƒÂ¡ guardada la poblaciÃƒÂ³n
 
                 if self.tamPoblacion == 0:
                     self.listaGen = [] #Lista auxiliar para ciclo
-                    saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃ³n en archivo
+                    saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃƒÂ³n en archivo
                     
                     for line in self.datos:
                         if saltoLinea > 1:
@@ -207,6 +207,8 @@ class Vertex(Problema):
                                 self.stringPoblacion += (str(self.matrizPoblacion[i][j]))
                                         
                         self.stringPoblacion += "\n"
+                #print(self.stringPoblacion)
+                print("Largo Matriz" + str(len(self.matrizPoblacion)))
                 self.salida = open("output.txt", 'w')
                 self.salida.write("GT1\n" + str(self.tamPoblacion) + "\n" + self.stringPoblacion)
                 self.salida.close()
@@ -215,7 +217,7 @@ class Vertex(Problema):
             listaResulFitness = []
             for i in range(len(self.matrizPoblacion)):
                 listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
-            print(listaResulFitness)
+            #print(listaResulFitness)
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
 
@@ -260,7 +262,7 @@ class Vertex(Problema):
                 self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen]
                 self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen]
 
-                #Falta verificar que el numero de puntos no sea mayor al tamaño del gen
+                #Falta verificar que el numero de puntos no sea mayor al tamaÃ±o del gen
 
                 self.listaPuntosFijos = []
 
@@ -282,11 +284,11 @@ class Vertex(Problema):
                 estaArriba = True
                 contadorIndices = 0
 
-                print("LISTAPUNTOSFIJOZZZ")
-
-                print(self.listaPuntosFijos)
-                print("Gen Padre!!!: ")
-                print(self.GenPadre)
+##                print("LISTAPUNTOSFIJOZZZ")
+##
+##                print(self.listaPuntosFijos)
+##                print("Gen Padre!!!: ")
+##                print(self.GenPadre)
                 for i in range(len(self.listaPuntosFijos)):
                     while contadorIndices != self.listaPuntosFijos[i]:
                         if estaArriba:
@@ -319,8 +321,8 @@ class Vertex(Problema):
 
                 sumaDeFitnesses = sum(listaDeFitnesses)
                 
-                print("Lista de Fitnesses: " + str(listaDeFitnesses))
-                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
+##                print("Lista de Fitnesses: " + str(listaDeFitnesses))
+##                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
 
                 ruedaDeLaFortuna = []
 
@@ -333,8 +335,8 @@ class Vertex(Problema):
                 self.GenMadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
                 self.GenPadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
 
-                print("El padre es: " + str(self.GenPadre))
-                print("La madre es: " + str(self.GenMadre))
+##                print("El padre es: " + str(self.GenPadre))
+##                print("La madre es: " + str(self.GenMadre))
                 
                 if self.GenMadre == self.GenPadre:
                     self.seleccionarGen()
@@ -358,7 +360,7 @@ class Vertex(Problema):
                 estaArriba = True
                 contadorIndices = 0
 
-                print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
+               # print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
                 
                 for i in range(len(self.listaPuntosFijos)):
                     while contadorIndices != self.listaPuntosFijos[i]:
@@ -385,18 +387,18 @@ class Vertex(Problema):
 
                 listaPadres = []#Guarda los dos mejores fitness
                 listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
-                print("Listassss : \n")
-                print(listaResulFitness)
-                print(max(listaResulFitness))
+##                print("Listassss : \n")
+##                print(listaResulFitness)
+##                print(max(listaResulFitness))
                 listaResulFitness.pop(listaResulFitness.index(max(listaResulFitness)))
                 listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
-                print(max(listaResulFitness))
-                print(listaPadres)
+##                print(max(listaResulFitness))
+##                print(listaPadres)
 
                 Padre = self.matrizPoblacion[listaPadres[0]]
                 Madre = self.matrizPoblacion[listaPadres[1]]
 
-                print(Padre, Madre)
+##                print(Padre, Madre)
 
                 self.listaPuntosFijos = []
 
@@ -430,7 +432,7 @@ class Vertex(Problema):
                             estaArriba = True
                         contadorIndices += 1
 
-                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
+##                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
                 self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
 
                 return self.listaHijosMutados
@@ -457,13 +459,27 @@ class Vertex(Problema):
             mitadTamPoblacion = int(mitadTamPoblacion)
             
             for i in range (0, self.cantGeneraciones):
+                print("\nNUMERO DE GENERACION: \n" + str(i))
                 for j in range(0, mitadTamPoblacion):
                     self.matrizNuevaGeneracion.append(self.seleccionarGen()[0])
                     self.matrizNuevaGeneracion.append(self.seleccionarGen()[1])
-            print("GENEIACIONES!!!!!!  "+str(self.matrizNuevaGeneracion))
+                    
+                self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
+                self.writePoblacion()
+                del self.matrizNuevaGeneracion[:]
+                self.matrizNuevaGeneracion[:] = []
 
-            self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
-            self.writePoblacion()
+            #self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
+##            print("Matriz Nueva poblacion y largo \n" )
+##            print(self.matrizNuevaGeneracion)
+##            print(len(self.matrizNuevaGeneracion))
+##            print("\nantes de escribir")
+            
+            #self.writePoblacion()
+##            print("despues de escribir")
+                    
+##            print("GENEIACIONES!!!!!!  "+str(self.matrizNuevaGeneracion))
+
 
             existeAlMenosUnGenValido = False
 
@@ -472,14 +488,14 @@ class Vertex(Problema):
                     existeAlMenosUnGenValido = True
 
             if existeAlMenosUnGenValido == True:
-                print("Existe al menos un gen v�lido en la poblaci�n")
+                print("Existe al menos un gen válido en la población")
             
             print("El fitness del mejor gen es: " + str(self.fitness(self.getBest())))
             
             
 
-#Falta verificar que la poblaciÃ³n sea vÃ¡lida con el tamaÃ±o de recubrimiento
-#Falta hacer la restricciÃ³n en caso de que el tamaÃ±o de poblaciÃ³n sea cero 
+#Falta verificar que la poblaciÃƒÂ³n sea vÃƒÂ¡lida con el tamaÃƒÂ±o de recubrimiento
+#Falta hacer la restricciÃƒÂ³n en caso de que el tamaÃƒÂ±o de poblaciÃƒÂ³n sea cero 
 
 ##########################################-----MIN COVER-----##########################################
 class Recubrimiento(Problema):
@@ -548,9 +564,9 @@ class Recubrimiento(Problema):
         def readPoblacion(self):
                 self.datos = open("datosRecMin.txt", 'r')
                 
-                self.matrizPoblacion = [] #Matriz final en donde quedarÃ¡ guardada la poblaciÃ³n
+                self.matrizPoblacion = [] #Matriz final en donde quedarÃƒÂ¡ guardada la poblaciÃƒÂ³n
                 self.listaGen = [] #Lista auxiliar para ciclo
-                saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃ³n en archivo
+                saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃƒÂ³n en archivo
 
                 for line in self.datos:
                         if saltoLinea > 1:
@@ -682,7 +698,7 @@ class Recubrimiento(Problema):
                 self.GenPadre = self.matrizPoblacion[self.filaRandomPrimerGen]
                 self.GenMadre = self.matrizPoblacion[self.filaRandomSegundoGen]
 
-                #Falta verificar que el numero de puntos no sea mayor al tamaño del gen
+                #Falta verificar que el numero de puntos no sea mayor al tamaÃ±o del gen
 
                 self.listaPuntosFijos = []
 
@@ -903,7 +919,7 @@ class Recubrimiento(Problema):
                     existeAlMenosUnGenValido = True
 
             if existeAlMenosUnGenValido == True:
-                print("Existe al menos un gen v�lido en la poblaci�n")
+                print("Existe al menos un gen válido en la población")
                 
 
     
@@ -912,9 +928,9 @@ class Recubrimiento(Problema):
 
 def main():
 
-	stringInstrucciones = "genetico gt1.txt datosVertex.txt 10 500 1 0 output.txt"
+	stringInstrucciones = "genetico gt1.txt datosVertex.txt 10 5000 1 0 output.txt"
 	listaInstrucciones = stringInstrucciones.split()
-	print(listaInstrucciones)
+##	print(listaInstrucciones)
 
 	pCantGeneraciones = int(listaInstrucciones[3])
 	pTamPoblacion = int(listaInstrucciones[4])
