@@ -600,7 +600,14 @@ class Recubrimiento(Problema):
                 print("Poblacion: " + str(self.matrizPoblacion)+ "\n")
 
         def geneSize(self):
-            return self.cantSubconjuntos
+
+                self.datos = open("sp5.txt", 'r')
+                self.datos.readline() #nombre
+                datosPrincipales = self.datos.readline()
+                datosPrincipales = datosPrincipales.split()
+                self.tamanioGen = int(datosPrincipales[0])
+                print("\nTamanio del gen: " + str(self.tamanioGen)+ "\n")
+                return self.tamanioGen
             
                 
         def writePoblacion(self):
@@ -935,47 +942,47 @@ class Recubrimiento(Problema):
 
 
 def main():
-
-	stringInstrucciones = "genetico gt1.txt datosVertex.txt 5 5000 1 0 output.txt"
-	listaInstrucciones = stringInstrucciones.split()
-##	print(listaInstrucciones)
-
-	pCantGeneraciones = int(listaInstrucciones[3])
-	pTamPoblacion = int(listaInstrucciones[4])
-	pMutacion = int(listaInstrucciones[5])
-	
-	pPolitica = int(listaInstrucciones[6])
-
-	numeroDeCruces = 1
-
-	print("\nVERTEX\n" )
-	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
-	x.readPoblacion()
-	x.readProblema()
-	x.generacion()
-
-
-##	print("\nRECUBRIMIENTO\n" )
-##	stringInstrucciones = "genetico problemRec.txt datosRecMin.txt 100 1000 100 2 output.txt"
+##
+##	stringInstrucciones = "genetico gt1.txt datosVertex.txt 5 5000 1 0 output.txt"
 ##	listaInstrucciones = stringInstrucciones.split()
-##	print(listaInstrucciones)
+####	print(listaInstrucciones)
 ##
 ##	pCantGeneraciones = int(listaInstrucciones[3])
 ##	pTamPoblacion = int(listaInstrucciones[4])
 ##	pMutacion = int(listaInstrucciones[5])
+##	
 ##	pPolitica = int(listaInstrucciones[6])
 ##
-##	#
-##	numeroDeCruces = 2
-##	genRecPrueba = [0,1,0,0,1]
-##	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
-##	r.readPoblacion()
-##	r.readProblema()
+##	numeroDeCruces = 1
 ##
-##	r.generacion()
-##
-##	r.getBest()
-##	r.seleccionarGen()
+##	print("\nVERTEX\n" )
+##	x = Vertex(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion, pCantGeneraciones)
+##	x.readPoblacion()
+##	x.readProblema()
+##	x.generacion()
+
+
+	print("\nRECUBRIMIENTO\n" )
+	stringInstrucciones = "genetico sp5.txt datosRecMin.txt 5 50 1 0 output.txt"
+	listaInstrucciones = stringInstrucciones.split()
+	print(listaInstrucciones)
+
+	pCantGeneraciones = int(listaInstrucciones[3])
+	pTamPoblacion = int(listaInstrucciones[4])
+	pMutacion = int(listaInstrucciones[5])
+	pPolitica = int(listaInstrucciones[6])
+
+	#
+	numeroDeCruces = 2
+	genRecPrueba = [0,1,0,0,1]
+	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
+	r.readPoblacion()
+	r.readProblema()
+
+	r.generacion()
+
+	r.getBest()
+	r.seleccionarGen()
 
     
 if __name__ == "__main__":
