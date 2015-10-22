@@ -218,6 +218,8 @@ class Vertex(Problema):
             for i in range(len(self.matrizPoblacion)):
                 listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
             #print(listaResulFitness)
+            elMejor = self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
+            print("Cantidad de unos del gen: " + str(elMejor.count(1)))  
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
 
@@ -489,7 +491,7 @@ class Vertex(Problema):
 
             if existeAlMenosUnGenValido == True:
                 print("Existe al menos un gen válido en la población")
-            
+           
             print("El fitness del mejor gen es: " + str(self.fitness(self.getBest())))
             
             
@@ -624,8 +626,8 @@ class Recubrimiento(Problema):
                 if gen[i] == 1:
                     self.listaSubconjuntosGen.append(self.subconjuntos[i])
             
-            print("\ngen"+str(self.gen))
-            print("Lista subconjuntos gen"+str(self.listaSubconjuntosGen)+"\n")
+            #print("\ngen"+str(self.gen))
+            #print("Lista subconjuntos gen"+str(self.listaSubconjuntosGen)+"\n")
             for i in range(len(self.listaSubconjuntosGen)):
                 for j in range (len(self.listaSubconjuntosGen[i])):
                     if self.listaSubconjuntosGen[i][j] not in self.universoFinal:
@@ -636,21 +638,25 @@ class Recubrimiento(Problema):
                 
             else:
                 self.resulFitness = len(self.listaSubconjuntosGen) + len(self.subconjuntos)
-            print(self.listaSubconjuntosGen)
-            print("Univeso Final: " + str(self.universoFinal))
-            print("Fitness: " + str(self.resulFitness))
+            #print(self.listaSubconjuntosGen)
+            #print("Univeso Final: " + str(self.universoFinal))
+            #print("Fitness: " + str(self.resulFitness))
             return self.resulFitness
     
         def getBest(self):
             listaResulFitness = []
             for i in range(len(self.matrizPoblacion)):
                 listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
-            print(listaResulFitness)
+            #print(listaResulFitness)
+            elMejor = self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
+            print("Cantidad de unos del gen: " + str(elMejor.count(1)))  
+            print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
+            return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]))
             return self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]
         
         def mutar(self, genHijoA, genHijoB):
-            print("Indice Mutacion : " + str(self.mutacion))
+##            print("Indice Mutacion : " + str(self.mutacion))
             probabilidad = 1
             
             if probabilidad <= self.mutacion:
@@ -678,7 +684,7 @@ class Recubrimiento(Problema):
                     else:
                         genHijoB[listaIndicesAMutar[i]] = 0
                         
-            print("lista de indices a mutar: " + str(listaIndicesAMutar))
+##            print("lista de indices a mutar: " + str(listaIndicesAMutar))
                         
             listaRetorno = []
             listaRetorno.append(genHijoA)
@@ -753,8 +759,8 @@ class Recubrimiento(Problema):
 
                 sumaDeFitnesses = sum(listaDeFitnesses)
                 
-                print("Lista de Fitnesses: " + str(listaDeFitnesses))
-                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
+##                print("Lista de Fitnesses: " + str(listaDeFitnesses))
+##                print("Suma de Fitnesses: " + str(sumaDeFitnesses))
 
                 ruedaDeLaFortuna = []
 
@@ -767,8 +773,8 @@ class Recubrimiento(Problema):
                 self.GenMadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
                 self.GenPadre = ruedaDeLaFortuna[randint(0, sumaDeFitnesses) - 1]
 
-                print("El padre es: " + str(self.GenPadre))
-                print("La madre es: " + str(self.GenMadre))
+##                print("El padre es: " + str(self.GenPadre))
+##                print("La madre es: " + str(self.GenMadre))
                 
                 if self.GenMadre == self.GenPadre:
                     self.seleccionarGen()
@@ -826,18 +832,18 @@ class Recubrimiento(Problema):
 
                 listaPadres = []#Guarda los dos mejores fitness
                 listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
-                print("Listassss : \n")
-                print(listaResulFitness)
-                print(max(listaResulFitness))
+##                print("Listassss : \n")
+##                print(listaResulFitness)
+##                print(max(listaResulFitness))
                 listaResulFitness.pop(listaResulFitness.index(max(listaResulFitness)))
                 listaPadres.append(listaResulFitness.index(max(listaResulFitness)))
-                print(max(listaResulFitness))
-                print(listaPadres)
+##                print(max(listaResulFitness))
+##                print(listaPadres)
 
                 Padre = self.matrizPoblacion[listaPadres[0]]
                 Madre = self.matrizPoblacion[listaPadres[1]]
 
-                print(Padre, Madre)
+##                print(Padre, Madre)
 
                 self.listaPuntosFijos = []
 
@@ -871,13 +877,13 @@ class Recubrimiento(Problema):
                             estaArriba = True
                         contadorIndices += 1
 
-                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
+##                print("Hijos sin mutar: " + str(self.Hijo_A) + str(self.Hijo_B))
                 self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
 
                 eleccionFinal = randint(0, 1)
-                print("Numero de Curces: " + str(self.numCruces))
+##                print("Numero de Curces: " + str(self.numCruces))
                 
-                print("Hijos Mutados: " + str(self.listaHijosMutados))
+##                print("Hijos Mutados: " + str(self.listaHijosMutados))
 
                 return self.listaHijosMutados
             
@@ -902,15 +908,17 @@ class Recubrimiento(Problema):
             mitadTamPoblacion = self.tamPoblacion/2
             mitadTamPoblacion = int(mitadTamPoblacion)
             
-            
             for i in range (0, self.cantGeneraciones):
+                print("\nNUMERO DE GENERACION: \n" + str(i))
                 for j in range(0, mitadTamPoblacion):
                     self.matrizNuevaGeneracion.append(self.seleccionarGen()[0])
                     self.matrizNuevaGeneracion.append(self.seleccionarGen()[1])
-            print("GENEIACIONES!!!!!!  "+str(self.matrizNuevaGeneracion))
-
-            self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
-            self.writePoblacion()
+                    
+                self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
+                self.writePoblacion()
+                del self.matrizNuevaGeneracion[:]
+                self.matrizNuevaGeneracion[:] = []            
+             
 
             existeAlMenosUnGenValido = False
 
@@ -928,7 +936,7 @@ class Recubrimiento(Problema):
 
 def main():
 
-	stringInstrucciones = "genetico gt1.txt datosVertex.txt 10 5000 1 0 output.txt"
+	stringInstrucciones = "genetico gt1.txt datosVertex.txt 5 5000 1 0 output.txt"
 	listaInstrucciones = stringInstrucciones.split()
 ##	print(listaInstrucciones)
 
