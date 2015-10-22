@@ -126,7 +126,7 @@ class Vertex(Problema):
 
                 self.cantidadAristasNoCubiertas = len(self.AristasNoCubiertas)
                 
-                self.fitnessFinal = self.num_ceros * ((self.num_unos + 1) - self.cantidadAristasNoCubiertas)
+                self.fitnessFinal = self.num_ceros * ((self.num_unos)*2 - self.cantidadAristasNoCubiertas)
 
                 return self.fitnessFinal
 
@@ -529,7 +529,7 @@ class Recubrimiento(Problema):
                 
                 self.tamUniverso = int(listaParametros[0])
                 self.cantSubconjuntos = int(listaParametros[1])
-                self.cantSubconjuntosDeseados = int(listaParametros[2])
+                self.tamanioRecubrimiento = int(listaParametros[2])
                 
                 self.linea = self.archi.readline()
                 while self.linea != "":
@@ -943,6 +943,7 @@ def main():
 	pCantGeneraciones = int(listaInstrucciones[3])
 	pTamPoblacion = int(listaInstrucciones[4])
 	pMutacion = int(listaInstrucciones[5])
+	
 	pPolitica = int(listaInstrucciones[6])
 
 	numeroDeCruces = 1
