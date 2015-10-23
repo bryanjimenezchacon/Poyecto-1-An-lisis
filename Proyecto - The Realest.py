@@ -541,14 +541,14 @@ class Recubrimiento(Problema):
                 
                 for i in range(len(self.subconjuntos)):#Ordena la matriz
                     self.subconjuntos[i].sort()
-                print("Subconjuntos: " + str(self.subconjuntos))
+##                print("Subconjuntos: " + str(self.subconjuntos))
                 
                 for i in range(len(self.subconjuntos)):# Crea el universo
                     for j in range(len(self.subconjuntos[i])):
                         if self.subconjuntos[i][j] not in self.universo:
                             self.universo.append(self.subconjuntos[i][j])
                 self.universo.sort()
-                print("Universo: " + str(self.universo))
+##                print("Universo: " + str(self.universo))
 
                 for i in range(len(self.subconjuntos)):#Crea la matriz vacia
                     self.subconjuntosBinarios.append([])
@@ -560,11 +560,11 @@ class Recubrimiento(Problema):
                         else:
                             self.subconjuntosBinarios[i].append(1)
         
-                print("Subconjuntos binarios: " +str(self.subconjuntosBinarios))
+##                print("Subconjuntos binarios: " +str(self.subconjuntosBinarios))
                     
 
         def readPoblacion(self):
-                self.datos = open("sp5.txt", 'r')
+                self.datos = open("datosRecMin.txt", 'r')
                 
                 self.matrizPoblacion = [] #Matriz final en donde quedarÃƒÂ¡ guardada la poblaciÃƒÂ³n
                 if self.tamPoblacion == 0:
@@ -604,14 +604,14 @@ class Recubrimiento(Problema):
                         for j in range(self.geneSize()):
                             listaAux.append(randint(0,1))
                         self.matrizPoblacion.append(listaAux)
-                print("Poblacion: " + str(self.matrizPoblacion)+ "\n")
-                print("Largo de la poblacion: " + str(len(self.matrizPoblacion)) + "\n")
-                print("Largo de la gen: " + str(len(self.matrizPoblacion[0])) + "\n")
+##                print("Poblacion: " + str(self.matrizPoblacion)+ "\n")
+##                print("Largo de la poblacion: " + str(len(self.matrizPoblacion)) + "\n")
+##                print("Largo de la gen: " + str(len(self.matrizPoblacion[0])) + "\n")
                 
 
         def geneSize(self):
 
-                self.datos = open("sp5.txt", 'r')
+                self.datos = open("datosRecMin.txt", 'r')
                 self.datos.readline() #nombre
                 datosPrincipales = self.datos.readline()
                 datosPrincipales = datosPrincipales.split()
@@ -624,8 +624,8 @@ class Recubrimiento(Problema):
 
                 
                 self.stringPoblacion = ""
-                print("Matriz Poblacion: " + str(self.matrizPoblacion) + "\n")
-                print("Largo de matriz poblacion: " + str(self.matrizPoblacion))
+##                print("Matriz Poblacion: " + str(self.matrizPoblacion) + "\n")
+##                print("Largo de matriz poblacion: " + str(self.matrizPoblacion))
                 for i in range(len(self.matrizPoblacion)):
                         
                         for j in range(len(self.matrizPoblacion[i])):
@@ -641,10 +641,8 @@ class Recubrimiento(Problema):
             self.resulFitness = 0
             self.listaSubconjuntosGen = []
             self.universoFinal = []
-            print("subconjuntos Gen: " + str(len(self.subconjuntos)))
             for i in range(len(gen)):
                 if gen[i] == 1:
-                    print("IInidce : "+ str(i))
                     self.listaSubconjuntosGen.append(self.subconjuntos[i])
             
             #print("\ngen"+str(self.gen))
@@ -669,11 +667,9 @@ class Recubrimiento(Problema):
             for i in range(len(self.matrizPoblacion)):
                 listaResulFitness.append(self.fitness(self.matrizPoblacion[i]))
             #print(listaResulFitness)
-            elMejor = self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
-            print("Cantidad de unos del gen: " + str(elMejor.count(1)))  
-            print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]))
-            return self.matrizPoblacion[listaResulFitness.index(max(listaResulFitness))]
+            elMejor = self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))] 
             print("El mejor es : " + str(self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]))
+            print("Con fitness de: " + str(min(listaResulFitness)))
             return self.matrizPoblacion[listaResulFitness.index(min(listaResulFitness))]
         
         def mutar(self, genHijoA, genHijoB):
@@ -819,7 +815,7 @@ class Recubrimiento(Problema):
                 estaArriba = True
                 contadorIndices = 0
 
-                print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
+##                print("Lista de Puntos Fijos: " +str(self.listaPuntosFijos))
                 
                 for i in range(len(self.listaPuntosFijos)):
                     while contadorIndices != self.listaPuntosFijos[i]:
@@ -833,8 +829,8 @@ class Recubrimiento(Problema):
                             estaArriba = True
                         contadorIndices += 1
 
-                print("Hijo A: "+str(self.Hijo_A))
-                print("Hijo B: "+str(self.Hijo_B))
+##                print("Hijo A: "+str(self.Hijo_A))
+##                print("Hijo B: "+str(self.Hijo_B))
                 
                 self.listaHijosMutados = self.mutar(self.Hijo_A, self.Hijo_B)
 
@@ -928,7 +924,7 @@ class Recubrimiento(Problema):
 
             mitadTamPoblacion = self.tamPoblacion/2
             mitadTamPoblacion = int(mitadTamPoblacion)
-            print("Matriz Poblacion ANTES de copiar: " + str(self.matrizPoblacion))
+##            print("Matriz Poblacion ANTES de copiar: " + str(self.matrizPoblacion))
             for i in range (0, self.cantGeneraciones):
                 print("\nNUMERO DE GENERACION: \n" + str(i))
                 for j in range(0, mitadTamPoblacion):
@@ -936,12 +932,12 @@ class Recubrimiento(Problema):
                     self.matrizNuevaGeneracion.append(self.seleccionarGen())
                     self.matrizNuevaGeneracion.append(self.seleccionarGen())
                     
-                print("Matriz Nueva Poblacion despues de copiar: " + str(self.matrizNuevaGeneracion))
-                print("Largo Matriz Nueva Poblacion despues de copiar: " + str(len(self.matrizNuevaGeneracion)))
+##                print("Matriz Nueva Poblacion despues de copiar: " + str(self.matrizNuevaGeneracion))
+##                print("Largo Matriz Nueva Poblacion despues de copiar: " + str(len(self.matrizNuevaGeneracion)))
                 
                     
                 self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
-                print("Matriz Poblacion despues de copiar: " + str(self.matrizPoblacion))
+##                print("Matriz Poblacion despues de copiar: " + str(self.matrizPoblacion))
                 self.writePoblacion()
                 del self.matrizNuevaGeneracion[:]
                 self.matrizNuevaGeneracion[:] = []            
@@ -952,10 +948,9 @@ class Recubrimiento(Problema):
             for i in range(len(self.matrizPoblacion)):
                 if self.getCantidadDeUnosDeUnGen(self.matrizPoblacion[i]) <= self.tamanioRecubrimiento:
                     existeAlMenosUnGenValido = True
-
-            if existeAlMenosUnGenValido == True:
+            if self.fitness(self.getBest()) <= self.tamanioRecubrimiento:
                 print("Existe al menos un gen válido en la población")
-                
+
 
     
 ###############################################-----PROGRAMA-----###############################################
@@ -983,7 +978,7 @@ def main():
 
 
 	print("\nRECUBRIMIENTO\n" )
-	stringInstrucciones = "genetico sp5.txt datosRecMin.txt 2 50 2 2 output.txt"
+	stringInstrucciones = "genetico sp5.txt datosRecMin.txt 5 50 1 1 output.txt"
 	listaInstrucciones = stringInstrucciones.split()
 	print(listaInstrucciones)
 
