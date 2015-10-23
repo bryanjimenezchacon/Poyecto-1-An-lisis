@@ -51,7 +51,7 @@ class Vertex(Problema):
                     
                      
         def readProblema(self):
-            self.archi = open("problemaVertex.txt" , 'r')
+            self.archi = open("gt1.txt" , 'r')
             self.nombre = self.archi.readline()#Nombre del problema
 
             self.cantidadesEspecificas = self.archi.readline().replace("\n", "")
@@ -520,7 +520,7 @@ class Recubrimiento(Problema):
 ##
         def readProblema(self):
                
-                self.archi = open("problemaRec.txt" , 'r')
+                self.archi = open("sp5.txt" , 'r')
                 
                 self.nombre = self.archi.readline()#Nombre del problema
 
@@ -564,40 +564,50 @@ class Recubrimiento(Problema):
                     
 
         def readPoblacion(self):
-                self.datos = open("datosRecMin.txt", 'r')
+                self.datos = open("sp5.txt", 'r')
                 
                 self.matrizPoblacion = [] #Matriz final en donde quedarÃƒÂ¡ guardada la poblaciÃƒÂ³n
-                self.listaGen = [] #Lista auxiliar para ciclo
-                saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃƒÂ³n en archivo
+                if self.tamPoblacion == 0:
+                    self.listaGen = [] #Lista auxiliar para ciclo
+                    saltoLinea = 0 #Variable para indicar el comienzo de la poblaciÃƒÂ³n en archivo
 
-                for line in self.datos:
-                        if saltoLinea > 1:
-                                if line[-1] != "\n":
-                                        for i in range(len(line)):
-                                                self.listaGen.append(int(line[i]))
-                                                
-                                        self.matrizPoblacion.append(copy.deepcopy(self.listaGen))
-                                        
-                                        del self.listaGen[:] # Elimina todos los elementos de la lista
-                                        self.listaGen[:] = []
-                                        
-                                else:
-                                        
-                                        for i in range(len(line) - 1):
-                                                self.listaGen.append(int(line[i]))
-                                                
-                                        self.matrizPoblacion.append(copy.deepcopy(self.listaGen))
-                                        
-                                        del self.listaGen[:] # Elimina todos los elementos de la lista
-                                        self.listaGen[:] = []
-                                
-                                
-                        elif saltoLinea == 1:
-                                self.tamPoblacion = int(line[:-1])
-                                saltoLinea += 1
-                        else:
-                                saltoLinea += 1
+                    for line in self.datos:
+                            if saltoLinea > 1:
+                                    if line[-1] != "\n":
+                                            for i in range(len(line)):
+                                                    self.listaGen.append(int(line[i]))
+                                                    
+                                            self.matrizPoblacion.append(copy.deepcopy(self.listaGen))
+                                            
+                                            del self.listaGen[:] # Elimina todos los elementos de la lista
+                                            self.listaGen[:] = []
+                                            
+                                    else:
+                                            
+                                            for i in range(len(line) - 1):
+                                                    self.listaGen.append(int(line[i]))
+                                                    
+                                            self.matrizPoblacion.append(copy.deepcopy(self.listaGen))
+                                            
+                                            del self.listaGen[:] # Elimina todos los elementos de la lista
+                                            self.listaGen[:] = []
+                                    
+                                    
+                            elif saltoLinea == 1:
+                                    self.tamPoblacion = int(line[:-1])
+                                    saltoLinea += 1
+                            else:
+                                    saltoLinea += 1
+                else:
+                    for i in range(self.tamPoblacion):
+                        listaAux = []
+                        for j in range(self.geneSize()):
+                            listaAux.append(randint(0,1))
+                        self.matrizPoblacion.append(listaAux)
                 print("Poblacion: " + str(self.matrizPoblacion)+ "\n")
+                print("Largo de la poblacion: " + str(len(self.matrizPoblacion)) + "\n")
+                print("Largo de la gen: " + str(len(self.matrizPoblacion[0])) + "\n")
+                
 
         def geneSize(self):
 
@@ -606,7 +616,7 @@ class Recubrimiento(Problema):
                 datosPrincipales = self.datos.readline()
                 datosPrincipales = datosPrincipales.split()
                 self.tamanioGen = int(datosPrincipales[0])
-                print("\nTamanio del gen: " + str(self.tamanioGen)+ "\n")
+               # print("\nTamanio del gen: " + str(self.tamanioGen)+ "\n")
                 return self.tamanioGen
             
                 
@@ -614,8 +624,10 @@ class Recubrimiento(Problema):
 
                 
                 self.stringPoblacion = ""
-                
+                print("Matriz Poblacion: " + str(self.matrizPoblacion) + "\n")
+                print("Largo de matriz poblacion: " + str(self.matrizPoblacion))
                 for i in range(len(self.matrizPoblacion)):
+                        
                         for j in range(len(self.matrizPoblacion[i])):
                                 self.stringPoblacion += (str(self.matrizPoblacion[i][j]))
                                         
@@ -629,8 +641,10 @@ class Recubrimiento(Problema):
             self.resulFitness = 0
             self.listaSubconjuntosGen = []
             self.universoFinal = []
+            print("subconjuntos Gen: " + str(len(self.subconjuntos)))
             for i in range(len(gen)):
                 if gen[i] == 1:
+                    print("IInidce : "+ str(i))
                     self.listaSubconjuntosGen.append(self.subconjuntos[i])
             
             #print("\ngen"+str(self.gen))
@@ -914,14 +928,20 @@ class Recubrimiento(Problema):
 
             mitadTamPoblacion = self.tamPoblacion/2
             mitadTamPoblacion = int(mitadTamPoblacion)
-            
+            print("Matriz Poblacion ANTES de copiar: " + str(self.matrizPoblacion))
             for i in range (0, self.cantGeneraciones):
                 print("\nNUMERO DE GENERACION: \n" + str(i))
                 for j in range(0, mitadTamPoblacion):
-                    self.matrizNuevaGeneracion.append(self.seleccionarGen()[0])
-                    self.matrizNuevaGeneracion.append(self.seleccionarGen()[1])
+##                    print("Seleccionar Gen :D " + str(self.seleccionarGen()))
+                    self.matrizNuevaGeneracion.append(self.seleccionarGen())
+                    self.matrizNuevaGeneracion.append(self.seleccionarGen())
+                    
+                print("Matriz Nueva Poblacion despues de copiar: " + str(self.matrizNuevaGeneracion))
+                print("Largo Matriz Nueva Poblacion despues de copiar: " + str(len(self.matrizNuevaGeneracion)))
+                
                     
                 self.matrizPoblacion = copy.deepcopy(self.matrizNuevaGeneracion)
+                print("Matriz Poblacion despues de copiar: " + str(self.matrizPoblacion))
                 self.writePoblacion()
                 del self.matrizNuevaGeneracion[:]
                 self.matrizNuevaGeneracion[:] = []            
@@ -942,8 +962,8 @@ class Recubrimiento(Problema):
 
 
 def main():
-##
-##	stringInstrucciones = "genetico gt1.txt datosVertex.txt 5 5000 1 0 output.txt"
+
+##	stringInstrucciones = "genetico gt1.txt datosVertex.txt 5 50 1 0 output.txt"
 ##	listaInstrucciones = stringInstrucciones.split()
 ####	print(listaInstrucciones)
 ##
@@ -963,7 +983,7 @@ def main():
 
 
 	print("\nRECUBRIMIENTO\n" )
-	stringInstrucciones = "genetico sp5.txt datosRecMin.txt 5 50 1 0 output.txt"
+	stringInstrucciones = "genetico sp5.txt datosRecMin.txt 2 50 2 2 output.txt"
 	listaInstrucciones = stringInstrucciones.split()
 	print(listaInstrucciones)
 
@@ -973,16 +993,16 @@ def main():
 	pPolitica = int(listaInstrucciones[6])
 
 	#
-	numeroDeCruces = 2
-	genRecPrueba = [0,1,0,0,1]
+	numeroDeCruces = 1
+##	genRecPrueba = [0,1,0,0,1]
 	r = Recubrimiento(pPolitica, numeroDeCruces, pMutacion, pTamPoblacion,  pCantGeneraciones)
 	r.readPoblacion()
 	r.readProblema()
 
 	r.generacion()
 
-	r.getBest()
-	r.seleccionarGen()
+##	r.getBest()
+##	r.seleccionarGen()
 
     
 if __name__ == "__main__":
